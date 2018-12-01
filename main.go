@@ -5,14 +5,16 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/golang/protobuf/proto"
-
 	"github.com/go-proto-buffers/src/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 func main() {
 	sm := doSimple()
 	writeToFile("Smple.bin", sm)
+	sm2 := &simplepb.Simple{}
+	readFromFile("Smple.bin", sm2)
+	fmt.Println(sm2)
 }
 
 func writeToFile(fileName string, pb proto.Message) error {
@@ -28,6 +30,20 @@ func writeToFile(fileName string, pb proto.Message) error {
 	}
 
 	fmt.Println("Data has been written")
+	return nil
+}
+
+func readFromFile(fileName string, pb proto.Message) error {
+	bytes, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		log.Fatalln("Failed to read from file", err)
+		return err
+	}
+	err2 := proto.Unmarshal(bytes, pb)
+	if err2 != nil {
+		log.Fatalln("Failed to write binary to file", err2)
+	}
+
 	return nil
 }
 
