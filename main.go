@@ -5,14 +5,26 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/golang/protobuf/jsonpb"
-
 	"github.com/go-proto-buffers/src/proto"
+	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
 )
 
 func main() {
 	sm := doSimple()
+	readWriteToFile(sm)
+	toAndFromJSON(sm)
+}
+
+func toAndFromJSON(sm proto.Message) {
+	str := toJSON(sm)
+	fmt.Println("JSON here =>", str)
+	sm2 := &simplepb.Simple{}
+	fromJSON(str, sm2)
+	fmt.Println("JSON string to proto struct =>", sm2)
+}
+
+func readWriteToFile(sm proto.Message) {
 	writeToFile("Smple.bin", sm)
 	sm2 := &simplepb.Simple{}
 	readFromFile("Smple.bin", sm2)
